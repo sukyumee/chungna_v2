@@ -34,14 +34,16 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 # FastAPI 실시간 서버
 FASTAPI_BASE = "http://168.107.55.96:8000"
-# ↓ 실제 엔드포인트로 수정하세요.
-# 예상 응답(형식 A): {"beds": {"1": {"temp": 20.5, "hum": 78.3}, ...}}
-# 예상 응답(형식 B): [{"bed_id": 1, "temperature": 20.5, "humidity": 78.3}, ...]
-FASTAPI_SENSOR_ENDPOINT = "/api/realtime"
+# 실제 엔드포인트 및 응답 형식:
+# GET /api/sensors/latest
+# 응답: {"data": [{"bed_name": "bed16", "temperature": 20.57, "humidity": 76.34,
+#                  "ppm": 473.0, "ec": 1.74, ...}, ...], "count": N}
+# -1.0 값은 센서 오프라인을 의미 → 자동 필터링
+FASTAPI_SENSOR_ENDPOINT = "/api/sensors/latest"
 
 # Google Sheets
 GSHEET_SPREADSHEET_ID = "19iY6VNhe4T2RVOsIX4vS5vIqHnaw3eWLGts27n17vNE"
-GSHEET_HARVEST_SHEET  = "수확데이터"   # ← 실제 시트명으로 수정
+GSHEET_HARVEST_SHEET  = "수확_이력"
 
 # Claude API
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -102,11 +104,25 @@ GROWTH_STAGES = [
 # 4. FastAPI 헬퍼
 # ──────────────────────────────────────────────────────────────────────────────
 
+def _parse_bed_id(bed_name: str) -> str:
+    """
+    'bed16' → '16',  'T1' → 'T1'
+    BED_LAYOUT 키 형식과 일치시킴.
+    """
+    if bed_name.startswith("bed"):
+        return bed_name[3:]   # 'bed16' → '16'
+    return bed_name           # 'T1', 'T2', 'T3' 그대로
+
+
 def fetch_realtime_data():
     """
-    FastAPI에서 실시간 온습도 데이터 fetch.
-    반환: (temp_dict, hum_dict, error_str|None)
-      temp_dict = {"1": 20.5, "2": 21.0, ...}
+    GET /api/sensors/latest 에서 실시간 온습도 fetch.
+    응답: {"data": [{"bed_name":"bed16","temperature":20.57,"humidity":76.34,...}, ...]}
+    -1.0 → 센서 오프라인 (무시)
+    반환: (temp_dict, hum_dict, extra_dict, error_str|None)
+      temp_dict  = {"16": 20.57, ...}
+      hum_dict   = {"16": 76.34, ...}
+      extra_dict = {"16": {"ppm":473, "ec":1.74, "ts":"13:00"}, ...}
     """
     try:
         resp = requests.get(
@@ -115,40 +131,46 @@ def fetch_realtime_data():
         resp.raise_for_status()
         data = resp.json()
 
-        temp_vals: dict = {}
-        hum_vals:  dict = {}
+        temp_vals:  dict = {}
+        hum_vals:   dict = {}
+        extra_vals: dict = {}
 
-        # 형식 A: {"beds": {"1": {"temp": ..., "hum": ...}, ...}}
-        if isinstance(data, dict) and "beds" in data:
-            for bid, vals in data["beds"].items():
-                t = vals.get("temp", vals.get("temperature"))
-                h = vals.get("hum",  vals.get("humidity"))
-                if t is not None:
-                    temp_vals[str(bid)] = float(t)
-                if h is not None:
-                    hum_vals[str(bid)]  = float(h)
-            return temp_vals, hum_vals, None
+        items = data.get("data", []) if isinstance(data, dict) else data
 
-        # 형식 B: [{"bed_id": 1, "temperature": ..., "humidity": ...}, ...]
-        if isinstance(data, list):
-            for item in data:
-                bid = str(item.get("bed_id", item.get("id", "")))
-                t   = item.get("temp", item.get("temperature"))
-                h   = item.get("hum",  item.get("humidity"))
-                if bid and t is not None:
-                    temp_vals[bid] = float(t)
-                if bid and h is not None:
-                    hum_vals[bid]  = float(h)
-            return temp_vals, hum_vals, None
+        for item in items:
+            raw_name = item.get("bed_name", "")
+            if not raw_name:
+                continue
+            bid = _parse_bed_id(raw_name)
+            t   = item.get("temperature", -1.0)
+            h   = item.get("humidity",    -1.0)
 
-        return {}, {}, "응답 형식 미지원"
+            # -1.0 = 센서 오프라인
+            if t is not None and float(t) != -1.0:
+                temp_vals[bid] = float(t)
+            if h is not None and float(h) != -1.0:
+                hum_vals[bid]  = float(h)
+
+            # 추가 정보 (hover용)
+            ppm = item.get("ppm", -1.0)
+            ec  = item.get("ec",  -1.0)
+            ts  = item.get("created_at", "")
+            if ts and "T" in ts:
+                ts = ts.split("T")[1][:5]   # "13:00"
+            extra_vals[bid] = {
+                "ppm": ppm if ppm != -1.0 else None,
+                "ec":  ec  if ec  != -1.0 else None,
+                "ts":  ts,
+            }
+
+        return temp_vals, hum_vals, extra_vals, None
 
     except requests.exceptions.ConnectionError:
-        return {}, {}, "서버 연결 실패"
+        return {}, {}, {}, "서버 연결 실패"
     except requests.exceptions.Timeout:
-        return {}, {}, "요청 시간 초과"
+        return {}, {}, {}, "요청 시간 초과"
     except Exception as e:
-        return {}, {}, str(e)
+        return {}, {}, {}, str(e)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -614,15 +636,19 @@ def load_harvest_data():
 
         key_env = os.environ.get("GOOGLE_SERVICE_ACCOUNT_KEY", "")
         if key_env.strip().startswith("{"):
-            # 환경변수에 JSON 내용 직접 저장된 경우 (Vercel)
+            # Vercel 환경변수에 JSON 내용 전체를 붙여넣은 경우
             import tempfile
-            with tempfile.NamedTemporaryFile(
+            tmp = tempfile.NamedTemporaryFile(
                 mode="w", suffix=".json", delete=False, encoding="utf-8"
-            ) as tmp:
-                tmp.write(key_env)
-                creds_path = tmp.name
+            )
+            tmp.write(key_env)
+            tmp.close()
+            creds_path = tmp.name
+        elif key_env and os.path.exists(key_env):
+            creds_path = key_env
         else:
-            creds_path = key_env or os.path.join(HERE, "service-account-key.json")
+            # 로컬: 앱 폴더의 service-account-key.json
+            creds_path = os.path.join(HERE, "service-account-key.json")
 
         if not os.path.exists(creds_path):
             return None, "서비스 계정 키 파일 없음 (service-account-key.json)"
@@ -763,9 +789,9 @@ def render_tab(tab: str):
 
     # ── 탭 1: 실시간 환경 현황 ────────────────────────────────────────────
     if tab == "tab-realtime":
-        temp_vals, hum_vals, err = fetch_realtime_data()
+        temp_vals, hum_vals, _extra, err = fetch_realtime_data()
         now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        err_text = f"⚠️  {err}" if err else f"✅  연결됨 — {now_str}"
+        err_text = f"⚠️  {err}" if err else f"✅  연결됨 — {now_str}  ({len(temp_vals)}개 센서)"
         err_col  = "#e53e3e" if err else "#38a169"
 
         init_temp_fig = make_floor_figure(
@@ -872,47 +898,69 @@ def render_tab(tab: str):
 
         cols = df.columns.tolist()
 
-        # 컬럼 자동 탐지
-        date_col    = next((c for c in cols if any(k in c for k in
-                            ("날짜", "일자", "date", "Date"))), None)
-        weight_col  = next((c for c in cols if any(k in c for k in
-                            ("중량", "무게", "kg", "g", "weight", "Weight"))), None)
-        variety_col = next((c for c in cols if any(k in c for k in
-                            ("품종", "variety", "Variety"))), None)
-        bed_col     = next((c for c in cols if any(k in c for k in
-                            ("재배대", "bed", "Bed"))), None)
+        # 실제 시트 컬럼 기준 (수확_이력 시트)
+        DATE_COL    = "수확 날짜"
+        WEIGHT_COL  = next((c for c in cols if "박스 제외" in c), None) or \
+                      next((c for c in cols if "무게" in c), None)
+        AVG_COL     = next((c for c in cols if "평균 무게" in c), None)
+        VARIETY_COL = "품종" if "품종" in cols else None
+        BED_COL     = "재배대 넘버" if "재배대 넘버" in cols else None
+        COUNT_COL   = next((c for c in cols if "개체수" in c), None)
 
-        # 차트
+        # 차트: 날짜별 재배대 수확량 (박스 제외, kg) 품종별 누적 바
         chart_fig = go.Figure()
+        date_col  = DATE_COL if DATE_COL in cols else None
+        weight_col = WEIGHT_COL
+
         if date_col and weight_col:
             try:
                 pf = df.copy()
+                # 날짜 파싱 ("2025-12-31 00:00:00" → "2025-12-31")
+                pf[date_col] = pd.to_datetime(pf[date_col], errors="coerce").dt.strftime("%Y-%m-%d")
                 pf[weight_col] = pd.to_numeric(pf[weight_col], errors="coerce")
-                pf = pf.dropna(subset=[weight_col])
+                pf = pf.dropna(subset=[date_col, weight_col])
+                pf = pf[pf[weight_col] > 0]
+
                 if not pf.empty:
-                    if variety_col:
-                        for var in pf[variety_col].unique():
-                            sub = pf[pf[variety_col] == var]
+                    colors = {"버터헤드": "#3182CE", "카이피라": "#38a169"}
+                    if VARIETY_COL and VARIETY_COL in pf.columns:
+                        for var in sorted(pf[VARIETY_COL].unique()):
+                            sub = pf[pf[VARIETY_COL] == var]
+                            agg = sub.groupby(date_col)[weight_col].sum().reset_index()
                             chart_fig.add_trace(go.Bar(
-                                x=sub[date_col], y=sub[weight_col], name=str(var),
+                                x=agg[date_col], y=agg[weight_col],
+                                name=str(var),
+                                marker_color=colors.get(str(var), "#718096"),
                             ))
                     else:
+                        agg = pf.groupby(date_col)[weight_col].sum().reset_index()
                         chart_fig.add_trace(go.Bar(
-                            x=pf[date_col], y=pf[weight_col],
+                            x=agg[date_col], y=agg[weight_col],
                             name="수확량", marker_color="#3182CE",
                         ))
+
                     chart_fig.update_layout(
-                        title=f"수확량 추이  ({weight_col})",
-                        xaxis_title=date_col,
-                        yaxis_title=weight_col,
+                        title="날짜별 수확량 (kg, 박스 제외)",
+                        xaxis_title="수확 날짜",
+                        yaxis_title="수확량 (kg)",
                         barmode="stack",
                         plot_bgcolor="#fafbfc", paper_bgcolor="#fff",
-                        height=340,
-                        margin=dict(l=60, r=20, t=50, b=60),
+                        height=360,
+                        margin=dict(l=60, r=20, t=50, b=80),
                         font=dict(family="Malgun Gothic"),
+                        xaxis=dict(tickangle=-45),
+                        legend=dict(orientation="h", y=1.05),
                     )
             except Exception:
                 pass
+
+        # 테이블에 표시할 핵심 컬럼 선택
+        display_cols = [c for c in [
+            DATE_COL, BED_COL, VARIETY_COL, WEIGHT_COL, AVG_COL,
+            COUNT_COL, "폐기율", "정식일자", "정식 후 일수",
+        ] if c and c in cols]
+        if not display_cols:
+            display_cols = cols[:10]  # fallback
 
         return html.Div([
             html.Div([
@@ -932,25 +980,32 @@ def render_tab(tab: str):
 
             html.Div([
                 dash_table.DataTable(
-                    data=df.to_dict("records"),
-                    columns=[{"name": c, "id": c} for c in cols],
-                    page_size=20,
+                    data=df[display_cols].to_dict("records"),
+                    columns=[{"name": c.replace("\n", " "), "id": c}
+                             for c in display_cols],
+                    page_size=25,
                     sort_action="native",
                     filter_action="native",
                     style_table={"overflowX": "auto"},
                     style_header={
                         "backgroundColor": "#ebf8ff", "fontWeight": "700",
-                        "fontSize": "13px", "border": "1px solid #bee3f8",
+                        "fontSize": "12px", "border": "1px solid #bee3f8",
+                        "whiteSpace": "normal",
                     },
                     style_cell={
-                        "fontSize": "12px", "padding": "8px 12px",
+                        "fontSize": "12px", "padding": "7px 10px",
                         "border": "1px solid #e2e8f0",
                         "fontFamily": "Malgun Gothic",
                         "whiteSpace": "normal", "height": "auto",
+                        "minWidth": "80px",
                     },
                     style_data_conditional=[
                         {"if": {"row_index": "odd"},
                          "backgroundColor": "#f7fafc"},
+                        {"if": {"filter_query": '{품종} = "버터헤드"'},
+                         "color": "#2B6CB0"},
+                        {"if": {"filter_query": '{품종} = "카이피라"'},
+                         "color": "#276749"},
                     ],
                 ),
             ], style={"padding": "0 24px 24px"}),
@@ -1227,7 +1282,7 @@ def _build_system_prompt() -> str:
     prevent_initial_call=True,
 )
 def update_realtime(_n):
-    temp_vals, hum_vals, err = fetch_realtime_data()
+    temp_vals, hum_vals, _extra, err = fetch_realtime_data()
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     temp_fig = make_floor_figure(
@@ -1243,7 +1298,7 @@ def update_realtime(_n):
         return temp_fig, hum_fig, f"⚠️  {err}", {"fontSize": "12px", "color": "#e53e3e"}
     return (
         temp_fig, hum_fig,
-        f"✅  연결됨 — {now_str}",
+        f"✅  연결됨 — {now_str}  ({len(temp_vals)}개 센서)",
         {"fontSize": "12px", "color": "#38a169"},
     )
 

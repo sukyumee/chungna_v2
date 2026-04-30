@@ -2,8 +2,8 @@ name: 재배대 현황 자동 갱신
 
 on:
   schedule:
-    - cron: '0 8 * * *'
-  workflow_dispatch:
+    - cron: '0 8 * * *'   # 매일 오전 8시 (UTC) = 한국시간 오후 5시
+  workflow_dispatch:       # 수동 실행 버튼
 
 jobs:
   fetch:
@@ -24,31 +24,44 @@ jobs:
       - name: 서비스 계정 키 생성
         run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}' > service-account-key.json
 
+      - name: secret 설정 확인
+        run: |
+          if [ ! -s service-account-key.json ]; then
+            echo "❌ GOOGLE_SERVICE_ACCOUNT_KEY secret이 비어있습니다."
+            echo "   GitHub 레포 Settings → Secrets → Actions 에서 설정해주세요."
+            exit 1
+          fi
+          echo "✅ 키 파일 생성됨 ($(wc -c < service-account-key.json) bytes)"
+
       - name: 재배대 현황 추출
         run: python fetch_cultivation.py
-        env:
-          GOOGLE_SERVICE_ACCOUNT_KEY: service-account-key.json
 
       - name: 키 파일 삭제
+        if: always()
         run: rm -f service-account-key.json
 
-      - name: 결과 검증 (빈 파일이면 실패 처리)
+      - name: 결과 검증
         run: |
-          python3 - <<'EOF'
+          python3 - <<'PYEOF'
           import json, sys
           with open("bed_status.json") as f:
               data = json.load(f)
           if not data:
-              print("❌ bed_status.json이 비어있습니다. 커밋하지 않습니다.")
+              print("❌ bed_status.json이 비어있습니다.")
               sys.exit(1)
-          print(f"✅ {len(data)}개 재배대 데이터 확인 완료")
-          EOF
+          print(f"✅ {len(data)}개 재배대 데이터 확인")
+          for bid, info in list(data.items())[:3]:
+              print(f"   재배대 {bid}: 정식일 {info.get('plant_date')}")
+          PYEOF
 
       - name: 변경사항 커밋 & 푸시
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add bed_status.json
-          git diff --staged --quiet || git commit -m "🌱 재배대 현황 자동 갱신 $(date +'%Y-%m-%d %H:%M KST')"
-          git push
-          
+          if git diff --staged --quiet; then
+            echo "변경사항 없음 — 커밋 스킵"
+          else
+            git commit -m "🌱 재배대 현황 자동 갱신 $(date +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi

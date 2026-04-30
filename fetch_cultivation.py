@@ -230,13 +230,54 @@ def parse_bed_numbers(text):
     return [int(n) for n in re.findall(r"(\d+)번", str(text)) if 1 <= int(n) <= 20]
 
 
+def _parse_a_date(a_val, current_year: int, last_month):
+    """
+    A열 날짜 파싱 (역방향 스캔 중 연도 추적 포함).
+    지원 형식:
+      - datetime 객체
+      - "2026-01-24 00:00:00"  (ISO)
+      - "4 /11 토", "1/1 일", "12/ 31 월"  (M /D 요일)
+    반환: (date | None, last_month, current_year)
+    """
+    if not a_val:
+        return None, last_month, current_year
+    if hasattr(a_val, "year"):
+        d = a_val.date() if hasattr(a_val, "date") else a_val
+        return d, d.month, d.year
+    s = str(a_val).strip()
+    if not s:
+        return None, last_month, current_year
+    # ISO 형식
+    try:
+        d = datetime.strptime(s[:10], "%Y-%m-%d").date()
+        return d, d.month, d.year
+    except Exception:
+        pass
+    # "M /D 요일" 형식  예: "4 /11 토", "1/1 일", "12/ 31 월"
+    m = re.match(r"^(\d{1,2})\s*/\s*(\d{1,2})", s)
+    if m:
+        mo, day = int(m.group(1)), int(m.group(2))
+        yr = current_year
+        # 역방향 스캔: 월이 커지면 연도가 하나 감소 (예: 4월 보다가 12월 만나면 전년도)
+        if last_month is not None and mo > last_month:
+            yr -= 1
+        try:
+            d = date(yr, mo, day)
+            return d, mo, yr
+        except Exception:
+            pass
+    return None, last_month, current_year
+
+
 def extract_bed_status(rows):
     """
     전체 행을 하단에서 위로 스캔하여 각 재배대(1~20)의 최신 정식/파종일 추출
     """
-    today       = date.today()
-    found       = {}   # bed_id → dict
+    today        = date.today()
+    found        = {}
     current_date = None
+    current_year = today.year
+    last_month   = None
 
     for i in range(len(rows) - 1, 2, -1):
         row   = rows[i]
@@ -246,13 +287,9 @@ def extract_bed_status(rows):
 
         # A열 날짜 갱신
         if a_val:
-            if hasattr(a_val, "year"):
-                current_date = a_val.date() if hasattr(a_val, "date") else a_val
-            else:
-                try:
-                    current_date = datetime.strptime(str(a_val)[:10], "%Y-%m-%d").date()
-                except Exception:
-                    pass
+            parsed, last_month, current_year = _parse_a_date(a_val, current_year, last_month)
+            if parsed:
+                current_date = parsed
 
         if not current_date:
             continue

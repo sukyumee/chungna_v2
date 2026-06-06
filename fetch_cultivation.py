@@ -282,7 +282,7 @@ def extract_bed_status(rows):
     for i in range(len(rows) - 1, 2, -1):
         row   = rows[i]
         a_val = row[0] if row else None
-        r_val = row[17] if len(row) > 17 else None
+        r_val = row[18] if len(row) > 18 else None
         m_val = row[12] if len(row) > 12 else None  # M열 (보조 참조)
 
         # A열 날짜 갱신
@@ -311,7 +311,7 @@ def extract_bed_status(rows):
             seed_raw = None
             for j in range(i + 1, min(i + 5, len(rows))):
                 nr     = rows[j]
-                nr_r   = nr[17] if len(nr) > 17 else None
+                nr_r   = nr[18] if len(nr) > 18 else None
                 nr_m   = nr[12] if len(nr) > 12 else None
 
                 # R열 우선

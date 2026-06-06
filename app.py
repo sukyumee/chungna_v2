@@ -1655,5 +1655,6 @@ if __name__ == "__main__":
     print("="*52 + "\n")
     app.run(debug=True, port=8050)
 
-
+# vercel 배포용
 server = app.server
+app = server

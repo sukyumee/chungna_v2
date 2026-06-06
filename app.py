@@ -1654,3 +1654,6 @@ if __name__ == "__main__":
     print("  http://127.0.0.1:8050")
     print("="*52 + "\n")
     app.run(debug=True, port=8050)
+
+
+server = app.server

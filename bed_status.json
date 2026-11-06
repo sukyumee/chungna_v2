@@ -4,247 +4,225 @@
     "plant_date": "2025-09-27",
     "seed_date": "2026-08-29",
     "prediction": {
-      "seed_days": 68,
-      "plant_days": 404,
+      "seed_days": 69,
+      "plant_days": 405,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1767.8,
+          "current_weight_g": 1777.5,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1150.6,
+          "current_weight_g": 1158.9,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "19": {
     "bed_id": 19,
     "plant_date": "2025-09-24",
     "seed_date": "2026-08-28",
     "prediction": {
-      "seed_days": 69,
-      "plant_days": 407,
+      "seed_days": 70,
+      "plant_days": 408,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1785.6,
+          "current_weight_g": 1795.3,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1163.7,
+          "current_weight_g": 1172.0,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "18": {
     "bed_id": 18,
     "plant_date": "2025-09-24",
     "seed_date": "2026-08-28",
     "prediction": {
-      "seed_days": 69,
-      "plant_days": 407,
+      "seed_days": 70,
+      "plant_days": 408,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1785.6,
+          "current_weight_g": 1795.3,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1163.7,
+          "current_weight_g": 1172.0,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "17": {
     "bed_id": 17,
     "plant_date": "2025-09-24",
     "seed_date": "2026-08-26",
     "prediction": {
-      "seed_days": 71,
-      "plant_days": 407,
+      "seed_days": 72,
+      "plant_days": 408,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1796.9,
+          "current_weight_g": 1806.6,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1175.4,
+          "current_weight_g": 1183.7,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "16": {
     "bed_id": 16,
     "plant_date": "2025-09-23",
     "seed_date": "2026-08-26",
     "prediction": {
-      "seed_days": 71,
-      "plant_days": 408,
+      "seed_days": 72,
+      "plant_days": 409,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1800.9,
+          "current_weight_g": 1810.6,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1177.9,
+          "current_weight_g": 1186.1,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "15": {
     "bed_id": 15,
     "plant_date": "2025-09-21",
     "seed_date": "2026-08-24",
     "prediction": {
-      "seed_days": 73,
-      "plant_days": 410,
+      "seed_days": 74,
+      "plant_days": 411,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1820.3,
+          "current_weight_g": 1830.0,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1194.4,
+          "current_weight_g": 1202.6,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "14": {
     "bed_id": 14,
     "plant_date": "2025-09-20",
     "seed_date": "2026-08-23",
     "prediction": {
-      "seed_days": 74,
-      "plant_days": 411,
+      "seed_days": 75,
+      "plant_days": 412,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1830.0,
+          "current_weight_g": 1839.7,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1202.6,
+          "current_weight_g": 1210.9,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "13": {
     "bed_id": 13,
     "plant_date": "2025-09-20",
     "seed_date": "2026-08-23",
     "prediction": {
-      "seed_days": 74,
-      "plant_days": 411,
+      "seed_days": 75,
+      "plant_days": 412,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1830.0,
+          "current_weight_g": 1839.7,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1202.6,
+          "current_weight_g": 1210.9,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "12": {
     "bed_id": 12,
     "plant_date": "2025-09-19",
     "seed_date": "2026-08-21",
     "prediction": {
-      "seed_days": 76,
-      "plant_days": 412,
+      "seed_days": 77,
+      "plant_days": 413,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1845.4,
+          "current_weight_g": 1855.1,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1216.8,
+          "current_weight_g": 1225.0,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "11": {
     "bed_id": 11,
     "plant_date": "2025-09-16",
     "seed_date": "2026-08-18",
     "prediction": {
-      "seed_days": 79,
-      "plant_days": 415,
+      "seed_days": 80,
+      "plant_days": 416,
       "varieties": {
         "버터헤드": {
-          "current_weight_g": 1874.5,
+          "current_weight_g": 1884.2,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
-          "current_weight_g": 1241.6,
+          "current_weight_g": 1249.8,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
   "10": {
     "bed_id": 10,
     "plant_date": "2025-09-15",
     "seed_date": "2026-08-18",
-    "prediction": {
-      "seed_days": 79,
-      "plant_days": 416,
-      "varieties": {
-        "버터헤드": {
-          "current_weight_g": 1878.5,
-          "days_remaining": 0,
-          "target_date": "2026-11-05"
-        },
-        "카이피라": {
-          "current_weight_g": 1244.0,
-          "days_remaining": 0,
-          "target_date": "2026-11-05"
-        }
-      }
-    },
-    "updated_at": "2026-11-05"
-  },
-  "9": {
-    "bed_id": 9,
-    "plant_date": "2025-09-14",
-    "seed_date": "2026-08-17",
     "prediction": {
       "seed_days": 80,
       "plant_days": 417,
@@ -252,21 +230,21 @@
         "버터헤드": {
           "current_weight_g": 1888.2,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
           "current_weight_g": 1252.2,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
-  "8": {
-    "bed_id": 8,
-    "plant_date": "2025-09-13",
-    "seed_date": "2026-08-16",
+  "9": {
+    "bed_id": 9,
+    "plant_date": "2025-09-14",
+    "seed_date": "2026-08-17",
     "prediction": {
       "seed_days": 81,
       "plant_days": 418,
@@ -274,43 +252,43 @@
         "버터헤드": {
           "current_weight_g": 1897.9,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
           "current_weight_g": 1260.5,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
+  },
+  "8": {
+    "bed_id": 8,
+    "plant_date": "2025-09-13",
+    "seed_date": "2026-08-16",
+    "prediction": {
+      "seed_days": 82,
+      "plant_days": 419,
+      "varieties": {
+        "버터헤드": {
+          "current_weight_g": 1907.6,
+          "days_remaining": 0,
+          "target_date": "2026-11-06"
+        },
+        "카이피라": {
+          "current_weight_g": 1268.8,
+          "days_remaining": 0,
+          "target_date": "2026-11-06"
+        }
+      }
+    },
+    "updated_at": "2026-11-06"
   },
   "7": {
     "bed_id": 7,
     "plant_date": "2025-09-12",
     "seed_date": "2026-08-14",
-    "prediction": {
-      "seed_days": 83,
-      "plant_days": 419,
-      "varieties": {
-        "버터헤드": {
-          "current_weight_g": 1913.3,
-          "days_remaining": 0,
-          "target_date": "2026-11-05"
-        },
-        "카이피라": {
-          "current_weight_g": 1274.6,
-          "days_remaining": 0,
-          "target_date": "2026-11-05"
-        }
-      }
-    },
-    "updated_at": "2026-11-05"
-  },
-  "6": {
-    "bed_id": 6,
-    "plant_date": "2025-09-11",
-    "seed_date": "2026-08-13",
     "prediction": {
       "seed_days": 84,
       "plant_days": 420,
@@ -318,43 +296,43 @@
         "버터헤드": {
           "current_weight_g": 1923.0,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
           "current_weight_g": 1282.9,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
+  },
+  "6": {
+    "bed_id": 6,
+    "plant_date": "2025-09-11",
+    "seed_date": "2026-08-13",
+    "prediction": {
+      "seed_days": 85,
+      "plant_days": 421,
+      "varieties": {
+        "버터헤드": {
+          "current_weight_g": 1932.7,
+          "days_remaining": 0,
+          "target_date": "2026-11-06"
+        },
+        "카이피라": {
+          "current_weight_g": 1291.2,
+          "days_remaining": 0,
+          "target_date": "2026-11-06"
+        }
+      }
+    },
+    "updated_at": "2026-11-06"
   },
   "5": {
     "bed_id": 5,
     "plant_date": "2025-09-10",
     "seed_date": "2026-08-11",
-    "prediction": {
-      "seed_days": 86,
-      "plant_days": 421,
-      "varieties": {
-        "버터헤드": {
-          "current_weight_g": 1938.4,
-          "days_remaining": 0,
-          "target_date": "2026-11-05"
-        },
-        "카이피라": {
-          "current_weight_g": 1297.0,
-          "days_remaining": 0,
-          "target_date": "2026-11-05"
-        }
-      }
-    },
-    "updated_at": "2026-11-05"
-  },
-  "4": {
-    "bed_id": 4,
-    "plant_date": "2025-09-09",
-    "seed_date": "2026-08-10",
     "prediction": {
       "seed_days": 87,
       "plant_days": 422,
@@ -362,21 +340,21 @@
         "버터헤드": {
           "current_weight_g": 1948.1,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
           "current_weight_g": 1305.3,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
-  "3": {
-    "bed_id": 3,
-    "plant_date": "2025-09-08",
-    "seed_date": "2026-08-09",
+  "4": {
+    "bed_id": 4,
+    "plant_date": "2025-09-09",
+    "seed_date": "2026-08-10",
     "prediction": {
       "seed_days": 88,
       "plant_days": 423,
@@ -384,21 +362,21 @@
         "버터헤드": {
           "current_weight_g": 1957.8,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
           "current_weight_g": 1313.5,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
-  "2": {
-    "bed_id": 2,
-    "plant_date": "2025-09-07",
-    "seed_date": "2026-08-08",
+  "3": {
+    "bed_id": 3,
+    "plant_date": "2025-09-08",
+    "seed_date": "2026-08-09",
     "prediction": {
       "seed_days": 89,
       "plant_days": 424,
@@ -406,21 +384,21 @@
         "버터헤드": {
           "current_weight_g": 1967.5,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
           "current_weight_g": 1321.8,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
   },
-  "1": {
-    "bed_id": 1,
-    "plant_date": "2025-09-06",
-    "seed_date": "2026-08-07",
+  "2": {
+    "bed_id": 2,
+    "plant_date": "2025-09-07",
+    "seed_date": "2026-08-08",
     "prediction": {
       "seed_days": 90,
       "plant_days": 425,
@@ -428,15 +406,37 @@
         "버터헤드": {
           "current_weight_g": 1977.2,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         },
         "카이피라": {
           "current_weight_g": 1330.1,
           "days_remaining": 0,
-          "target_date": "2026-11-05"
+          "target_date": "2026-11-06"
         }
       }
     },
-    "updated_at": "2026-11-05"
+    "updated_at": "2026-11-06"
+  },
+  "1": {
+    "bed_id": 1,
+    "plant_date": "2025-09-06",
+    "seed_date": "2026-08-07",
+    "prediction": {
+      "seed_days": 91,
+      "plant_days": 426,
+      "varieties": {
+        "버터헤드": {
+          "current_weight_g": 1986.9,
+          "days_remaining": 0,
+          "target_date": "2026-11-06"
+        },
+        "카이피라": {
+          "current_weight_g": 1338.3,
+          "days_remaining": 0,
+          "target_date": "2026-11-06"
+        }
+      }
+    },
+    "updated_at": "2026-11-06"
   }
 }
